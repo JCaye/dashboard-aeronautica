@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+</head>
+
+<body>
+  <style type="text/css">
+	html, body{width: 100%; height: 100%; padding: 0; margin: 0}
+	div{position: absolute; padding: 1em}
+	#nw{background: #fff; top: 0; left: 0; right: 50%; bottom: 50%}
+	#ne{background: #fff; top: 0; left: 50%; right: 0; bottom: 50%}
+	#sw{background: #fff; top: 50%; left: 0; right: 50%; bottom: 0}
+	#se{background: #fff; top: 50%; left: 50%; right: 0; bottom: 0}
+	#east{background: #fff; top: 0; left: 50%; right: 0; bottom: 0}
+	#west{background: #fff; top: 0; left: 0%; right: 50%; bottom: 0}
+	</style>
+	<div id="west">
+		<canvas id="chart1" width="100%" height="95%"></canvas>
+		<script>
+			var barChartData = {
+				labels: [],
+				datasets: []
+			};
+			
+			{% for item in render_this['chart1']['labels'] %}
+				barChartData.labels.push('{{ item }}');
+			{% endfor %}
+			
+			//var colors = ["rgba(255,0,0,1)", "rgba(150, 255, 0, 1)", "rgba(0, 0, 255, 1)", "rgba(0,0,0,1", "rgba(255, 0, 255, 1)", "rgba(0, 255, 153, 1)", "rgba(0, 204, 255, 1)", "rgba(153, 102, 255, 1)", "rgba(204, 51, 153, 1)", "rgba(204, 153, 0, 1)", "rgba(51, 153, 51, 1)"]
+			var colors = [
+				"rgba(255,0,0,1)",
+				"rgba(200,50,0,1)",
+				"rgba(150,100,0,1)",
+				"rgba(100,150,0,1)",
+				"rgba(50,200,0,1)",
+				"rgba(0,255,0,1)",
+				"rgba(0,200,50,1)",
+				"rgba(0,150,100,1)",
+				"rgba(0,100,150,1)",
+				"rgba(0,50,200,1)",
+				"rgba(0,0,255,1)",
+				"rgba(50,0,200,1)",
+				"rgba(100,0,150,1)",
+				"rgba(150,0,100,1)",
+				"rgba(200,0,50,1)"
+				];
+			var counter = 0;
+			{% for key, value in render_this['chart1']['values'].items() %}
+				barChartData.datasets.push({
+					label: '{{ key }}',
+					backgroundColor: colors[counter],
+					data: {{ value }}
+				});
+				counter += 1;
+			{% endfor %}
+			
+			var myChart = document.getElementById("chart1").getContext("2d");
+			
+			var chart = new Chart(myChart, {
+				type: 'bar',
+				data: barChartData,
+				options: {
+					title: {
+						display: true,
+						text: 'Ocorrencias por trimestre e empresa'
+					},
+					responsive: true,
+					scales: {
+						xAxes: [{
+							stacked: true
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					}
+				}
+			});
+		  
+		</script>
+	</div>
+	
+	<div id="ne">
+		<canvas id="chart2"></canvas>
+		<script>
+			var barChartData = {
+				labels: [],
+				datasets: []
+			};
+			
+			{% for item in render_this['chart2']['labels'] %}
+				barChartData.labels.push('{{ item }}');
+			{% endfor %}
+			
+			//var colors = ["rgba(255,0,0,1)", "rgba(150, 255, 0, 1)", "rgba(0, 0, 255, 1)", "rgba(0,0,0,1", "rgba(255, 0, 255, 1)", "rgba(0, 255, 153, 1)", "rgba(0, 204, 255, 1)", "rgba(153, 102, 255, 1)", "rgba(204, 51, 153, 1)", "rgba(204, 153, 0, 1)", "rgba(51, 153, 51, 1)"]
+			var colors = ["rgba(255,0,0,1)", "rgba(170,80,0,1)", "rgba(80,210,0,1)", "rgba(0,255,0,1)", "rgba(0,130,80,1)", "rgba(0,80,120,1)", "rgba(0,0,200,1)"];
+			var counter = 0;
+			{% for key, value in render_this['chart2']['values'].items() %}
+				barChartData.datasets.push({
+					label: '{{ key }}',
+					backgroundColor: colors[counter],
+					data: {{ value }}
+				});
+				counter += 1;
+			{% endfor %}
+			
+			var myChart = document.getElementById("chart2").getContext("2d");
+			
+			var chart = new Chart(myChart, {
+				type: 'bar',
+				data: barChartData,
+				options: {
+					title: {
+						display: true,
+						text: 'Ocorrencias por trimestre e tipo de operação'
+					},
+					responsive: true,
+					scales: {
+						xAxes: [{
+							stacked: true
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					}
+				}
+			});
+		  
+		</script>
+	</div>
+	<div id="se">
+		<canvas id="chart3" width="100%" height="46%"></canvas>
+		<script>
+			var barChartData = {
+				labels: [],
+				datasets: []
+			};
+			
+			{% for item in render_this['chart3']['labels'] %}
+				barChartData.labels.push('{{ item }}');
+			{% endfor %}
+			
+			//var colors = ["rgba(255,0,0,1)", "rgba(150, 255, 0, 1)", "rgba(0, 0, 255, 1)", "rgba(0,0,0,1", "rgba(255, 0, 255, 1)", "rgba(0, 255, 153, 1)", "rgba(0, 204, 255, 1)", "rgba(153, 102, 255, 1)", "rgba(204, 51, 153, 1)", "rgba(204, 153, 0, 1)", "rgba(51, 153, 51, 1)"]
+			var colors = [
+				"rgba(255,0,0,1)",
+				"rgba(200,50,0,1)",
+				"rgba(150,100,0,1)",
+				"rgba(100,150,0,1)",
+				"rgba(50,200,0,1)",
+				"rgba(0,255,0,1)",
+				"rgba(0,200,50,1)",
+				"rgba(0,150,100,1)",
+				"rgba(0,100,150,1)",
+				"rgba(0,50,200,1)",
+				"rgba(0,0,255,1)",
+				"rgba(50,0,200,1)",
+				"rgba(100,0,150,1)",
+				"rgba(150,0,100,1)",
+				"rgba(200,0,50,1)"
+				];
+				var counter = 0;
+			{% for key, value in render_this['chart3']['values'].items() %}
+				barChartData.datasets.push({
+					label: '{{ key }}',
+					backgroundColor: colors[counter],
+					data: {{ value }}
+				});
+				counter += 1;
+			{% endfor %}
+			
+			var myChart = document.getElementById("chart3").getContext("2d");
+			
+			var chart = new Chart(myChart, {
+				type: 'bar',
+				data: barChartData,
+				options: {
+					title: {
+						display: true,
+						text: 'Ocorrencias por trimestre e tipo de aeronave'
+					},
+					responsive: true,
+					scales: {
+						xAxes: [{
+							stacked: true
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					}
+				}
+			});
+		  
+		</script>
+	</div>
+  </body>
+</html>

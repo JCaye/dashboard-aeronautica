@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+</head>
+
+<body>
+	<div>
+	  <center>
+		<h1>{{ title }}</h1>
+	  </center>
+	  <center>
+		<canvas id="oco_by_company" width="600" height="400"></canvas>
+		<script>
+		  // bar chart data
+		  var barData = {
+			labels : [
+			  {% for item in labels %}
+			   "{{ item }}",
+			  {% endfor %}
+		],
+			datasets : [{
+			  fillColor: "rgba(151,187,205,0.2)",
+			  strokeColor: "rgba(151,187,205,1)",
+			  pointColor: "rgba(151,187,205,1)",
+			  data : [
+				{% for item in values %}
+				   "{{ item }}",
+				  {% endfor %}
+			]
+			  }
+			]
+		  }
+		 // get bar chart canvas
+		 var mychart = document.getElementById("oco_by_company").getContext("2d");
+		   steps = 10
+		   max = {{max}}
+		 // draw bar chart
+		 new Chart(mychart).Bar(barData, {
+		   scaleOverride: true,
+		   scaleSteps: steps,
+		   scaleStepWidth: Math.ceil(max / steps),
+		   scaleStartValue: 0,
+		   scaleShowVerticalLines: true,
+		   scaleShowGridLines : true,
+		   barShowStroke : true,
+		   scaleShowLabels: true
+		   }
+		 );
+		</script>
+	  </center>
+	</div>
+	<div>
+		<center>
+			<h1>{{ title2 }}</h1>
+
+			<canvas id="oco_by_company_overtime" width="600" height="400"></canvas>
+			<script>
+			  // bar chart data
+			  var barData = {
+				labels : [
+				  {% for item in labels2 %}
+					"{{ item }}",
+				  {% endfor %}
+				],
+				datasets : [{
+				  fillColor: "rgba(151,187,205,0.2)",
+				  strokeColor: "rgba(151,187,205,1)",
+				  pointColor: "rgba(151,187,205,1)",
+				  pointStrokeColor: "#fff",
+				  pointHighlightFill: "#fff",
+				  pointHighlightStroke: "rgba(151,187,205,1)",
+				  bezierCurve : false,
+				  data : [
+				{% for item in values2 %}
+					  {{ item }},
+					{% endfor %}]
+				  }
+			]
+			  }
+			  Chart.defaults.global.animationSteps = 50;
+			  Chart.defaults.global.tooltipYPadding = 16;
+			  Chart.defaults.global.tooltipCornerRadius = 0;
+			  Chart.defaults.global.tooltipTitleFontStyle = "normal";
+			  Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+			  Chart.defaults.global.animationEasing = "easeOutBounce";
+			  Chart.defaults.global.responsive = false;
+			  Chart.defaults.global.scaleLineColor = "black";
+			  Chart.defaults.global.scaleFontSize = 16;
+			  // get bar chart canvas
+			  var mychart = document.getElementById("oco_by_company_overtime").getContext("2d");
+			  steps = 10
+			  max = {{ max }}
+			  // draw bar chart
+			  var LineChartDemo = new Chart(mychart).Line(barData, {
+				scaleOverride: true,
+				scaleSteps: steps,
+				scaleStepWidth: Math.ceil(max / steps),
+				scaleStartValue: 0,
+				scaleShowVerticalLines: true,
+				scaleShowGridLines : true,
+				barShowStroke : true,
+				scaleShowLabels: true,
+				bezierCurve: false,
+			  });
+			</script>
+		</center>
+	</div>
+</body>
+</html>
+
+var colors = ["rgba(255,0,0,1)", "rgba(150, 255, 0, 1)", "rgba(0, 0, 255, 1)", "rgba(0,0,0,1", "rgba(255, 0, 255, 1)", "rgba(0, 255, 153, 1)", "rgba(0, 204, 255, 1)", "rgba(153, 102, 255, 1)", "rgba(204, 51, 153, 1)", "rgba(204, 153, 0, 1)", "rgba(51, 153, 51, 1)"]
+		  var bgColors = ["rgba(255,0,0,0.1)", "rgba(150, 255, 0, 0.1)", "rgba(0, 0, 255, 0.1)", "rgba(0,0,0,0.1", "rgba(255, 0, 255, 0.1)", "rgba(0, 255, 153, 0.1)", "rgba(0, 204, 255, 0.1)", "rgba(153, 102, 255, 0.1)", "rgba(204, 51, 153, 0.1)", "rgba(204, 153, 0, 0.1)", "rgba(51, 153, 51, 0.1)"]
+		  var data = {
+			labels : [],
+			datasets : [{
+			  borderDash: [5,5],
+			  label: 'TOTAL DE OCORRENCIAS',
+			  yAxisID: 'total',
+			  data: {{render_this['chart2']['values']}},
+			  backgroundColor: bgColors[0],
+			  borderColor: colors[0]
+			}]
+		  }
+		  {% for label in render_this['chart2']['labels'] %}
+			data.labels.push("{{ label }}");
+		  {% endfor %}
+		  
+		  var counter = 1
+		  {% for type, percent in render_this['chart3']['values'].items() %}
+			data.datasets.push({
+			  label: "{{ type }}",
+			  yAxisID: 'percent',
+			  data: {{ percent }},
+			  backgroundColor: "rgba(0,0,0,0)",
+			  borderColor: colors[counter]
+			})
+			counter += 1
+		  {% endfor %}
+		  
+		  var mychart = document.getElementById("chart2").getContext("2d");
+		  
+		  var chart = new Chart(mychart,{
+			type: 'line',
+			data: data,
+			options: {
+				responsive: true,
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				title: {
+					display: true,
+					text: "{{render_this['chart2']['title'] }}"
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Período em trimestres',
+							fontSize: 14
+						}
+					}],
+					yAxes: [{
+						id: 'total',
+						type: 'linear',
+						position: 'left',
+						gridLines: {display: false},
+						ticks: {
+							min: 20
+						},
+						scaleLabel: {
+							display: true,
+							labelString: 'Total de ocorrências',
+							fontSize: 14
+						}
+					},
+					{
+						id: 'percent',
+						type: 'linear',
+						position: 'right',
+						ticks: {
+							max: .55,
+							min: 0
+						},
+						scaleLabel: {
+							display: true,
+							labelString: 'Percentual de ocorrências por tipo de operação no período',
+							fontSize: 14
+						}
+					}]
+				},
+				legend: {
+					display: true
+					},
+				elements: {
+					line: {
+						tension: 0 //straight lines between points
+					}
+				}
+			}
+		  });
+		  
+		  	<div id="nw">
+		<center>
+			<h3>{{ render_this['chart1']['title'] }}</h3>
+		</center>
+		<canvas id="chart1" width="100%" height="45%"></canvas>
+		<script>
+		  var data = {
+			labels : [],
+			datasets : [{
+				data: {{ render_this['chart1']['values'] }},
+				backgroundColor: [
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)',
+					'rgba(255, 50, 50, 0.4)'
+				],
+				borderColor: [
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)',
+					'rgba(255, 50, 50, 1)'
+				],
+            borderWidth: 1
+			}]
+		  };
+		  {% for company in render_this['chart1']['labels'] %}
+			data.labels.push("{{company}}");
+		  {% endfor %}
+		  var mychart = document.getElementById("chart1").getContext("2d");
+		  var chart = new Chart(mychart,{
+			type: 'bar',
+			data: data,
+			options: {
+				legend: {
+					display: false
+					},
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}],
+					xAxes: [{
+						ticks: {
+							fontSize: 8
+							}
+						}]
+				}
+			}
+		  });
+		</script>
+	</div>
+	<div id="sw">
+		<center>
+			<h3>{{ render_this['chart']['title'] }}</h3>
+		</center>
+		<canvas id="chart" height="100%"></canvas>
+		<script>
+		  var colors = ["rgba(255,0,0,1)", "rgba(150, 255, 0, 1)", "rgba(0, 0, 255, 1)", "rgba(0,0,0,1", "rgba(255, 0, 255, 1)"]
+		  var bgColors = ["rgba(255,0,0,0.1)", "rgba(150, 255, 0, 0.1)", "rgba(0, 0, 255, 0.1)", "rgba(0,0,0,0.1", "rgba(255, 0, 255, 0.1)"]
+		  var data = {
+			labels : [],
+			datasets : []
+		  }
+		  {% for label in render_this['chart']['labels'] %}
+			data.labels.push("{{ label }}");
+		  {% endfor %}
+		  
+		  counter = 0
+		  {% for company, value in render_this['chart']['values'].items() %}
+			data.datasets.push({
+			  label: "{{company}}",
+			  data: {{value}},
+			  backgroundColor: bgColors[counter],
+			  borderColor: colors[counter]
+			})
+			counter += 1
+		  {% endfor %}
+		  
+		  var mychart = document.getElementById("chart").getContext("2d");
+		  
+		  var chart = new Chart(mychart,{
+			type: 'line',
+			data: data,
+			options: {
+				elements: {
+					line: {
+						tension: 0 //straight lines between points
+					}
+				}
+			}
+		  });
+		</script>
+	</div>
