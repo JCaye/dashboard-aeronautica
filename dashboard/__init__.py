@@ -1,5 +1,6 @@
 import os
 
+from . import board
 from flask import Flask
 
 def create_app(test_config=None):
@@ -17,21 +18,6 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
-    # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-    
-    from . import db
-    db.init_app(app)
-    
-    from . import board
     app.register_blueprint(board.bp)
 
     return app

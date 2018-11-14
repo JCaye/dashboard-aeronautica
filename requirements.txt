@@ -1,5 +1,4 @@
 Click==7.0
--e git+https://github.com/JCaye/dashboard-aeronautica.git@7b6ad3761b1c2b896502f802df146efd68404185#egg=dashboard
 DateTime==4.3
 Flask==1.0.2
 gunicorn==19.9.0

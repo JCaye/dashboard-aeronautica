@@ -8,9 +8,10 @@ Created on Wed Nov  7 20:08:02 2018
 import click
 import pandas as pd
 
-from flask import current_app, g
-from flask.cli import with_appcontext
 from . import model
+
+from flask import g
+from flask.cli import with_appcontext
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -29,52 +30,3 @@ def close_session(e=None):
 
     if session is not None:
         session.close()
-
-def init_db():
-    engine = get_engine()
-    model.Base.metadata.create_all(engine)
-    s = get_session()
-    
-    data_oco = pd.read_csv('oco.csv', sep='~')
-    data_rec = pd.read_csv('rec.csv', sep='~')
-    data_anv = pd.read_csv('anv.csv', sep='~')
-    data_ftc = pd.read_csv('ftc.csv', sep='~')
-    
-    data_oco['codigo_ocorrencia'] = data_oco['codigo_ocorrencia'].apply(lambda x: str(x))
-    
-    data_rec['codigo_ocorrencia'] = data_rec['codigo_ocorrencia'].apply(lambda x: str(x))
-    data_anv['codigo_ocorrencia'] = data_anv['codigo_ocorrencia'].apply(lambda x: str(x))
-    data_ftc['codigo_ocorrencia'] = data_ftc['codigo_ocorrencia'].apply(lambda x: str(x))
-    
-    data_oco['recomendacoes'] = (data_oco['codigo_ocorrencia']
-                                    .apply(lambda codigo:
-                                        list(data_rec[data_rec['codigo_ocorrencia'] == codigo]
-                                            .apply(lambda row:
-                                                model.Recomendacao(**row.to_dict()), axis = 1))))
-    data_oco['fatores'] = (data_oco['codigo_ocorrencia']
-                                    .apply(lambda codigo:
-                                        list(data_ftc[data_ftc['codigo_ocorrencia'] == codigo]
-                                            .apply(lambda row:
-                                                model.Fator(**row.to_dict()), axis = 1))))
-    data_oco['aeronaves'] = (data_oco['codigo_ocorrencia']
-                                    .apply(lambda codigo:
-                                        list(data_anv[data_anv['codigo_ocorrencia'] == codigo]
-                                            .apply(lambda row:
-                                                model.Aeronave(**row.to_dict()), axis = 1))))
-    
-    
-    
-    [s.add(model.Ocorrencia(**data_oco.iloc[i].to_dict())) for i in range(data_oco.shape[0])]
-    s.commit()
-    close_session()
-
-@click.command('init-db')
-@with_appcontext
-def init_db_command():
-    """Clear the existing data and create new tables."""
-    init_db()
-    click.echo('Initialized the database.')
-
-def init_app(app):
-    app.teardown_appcontext(close_session)
-    app.cli.add_command(init_db_command)
