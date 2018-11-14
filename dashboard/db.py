@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Nov  7 20:08:02 2018
 
-@author: JulioCaye
-"""
-
-import click
 import pandas as pd
 
 from . import model
 
 from flask import g
-from flask.cli import with_appcontext
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
