@@ -21,7 +21,7 @@ def get_tipo_operacao():
             .resample('3M')
             .agg('sum'))
 
-def get_tipo_aeronave():
+def get_tipo_dano():
      df = (pd.read_sql(get_session().query(Ocorrencia.ocorrencia_dia, Aeronave.aeronave_nivel_dano).join(Aeronave).statement, get_engine())
             .apply(lambda x: x if x.name != 'ocorrencia_dia' else pd.to_datetime(x, yearfirst=True))
             .apply(lambda x: x if x.name != 'aeronave_tipo_operacao' else x.apply(lambda y: 'OUTROS' if y not in ['VOO PRIVADO', 'VOO REGULAR', 'VOO DE INSTRUÇÃO', 'TÁXI AÉREO', 'OPERAÇÃO AGRÍCOLA', 'VOO EXPERIMENTAL'] else y))
