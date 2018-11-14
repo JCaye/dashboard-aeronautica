@@ -1,4 +1,6 @@
 Click==7.0
+-e git+https://github.com/JCaye/dashboard-aeronautica.git@7b6ad3761b1c2b896502f802df146efd68404185#egg=dashboard
+DateTime==4.3
 Flask==1.0.2
 gunicorn==19.9.0
 itsdangerous==1.1.0
@@ -9,5 +11,6 @@ pandas==0.23.4
 python-dateutil==2.7.5
 pytz==2018.7
 six==1.11.0
-SQLAlchemy==1.2.14
+SQLAlchemy==1.2.13
 Werkzeug==0.14.1
+zope.interface==4.6.0

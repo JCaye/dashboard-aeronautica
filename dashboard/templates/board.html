@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Dashboard Aeronáutica</title>
+  <title>{{ title }}</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<style type="text/css">
+		html, body{background-color: #ffc107; width: 100%; height: 100%; padding: 0; margin: 0}
+		div{position: absolute; padding: 1em; opacity: 0.8}
+		#nw{background: #fff; top: 0; left: 0; right: 50%; bottom: 50%}
+		#ne{background: #fff; top: 0; left: 50%; right: 0; bottom: 50%}
+		#sw{background: #fff; top: 50%; left: 0; right: 50%; bottom: 0}
+		#se{background: #fff; top: 50%; left: 50%; right: 0; bottom: 0}
+		#east{background: #fff; top: 0; left: 50%; right: 0; bottom: 0}
+		#west{background: #fff; top: 0; left: 0%; right: 50%; bottom: 0}
+	</style>
 </head>
 
 <body>
-  <style type="text/css">
-	html, body{width: 100%; height: 100%; padding: 0; margin: 0}
-	div{position: absolute; padding: 1em}
-	#nw{background: #fff; top: 0; left: 0; right: 50%; bottom: 50%}
-	#ne{background: #fff; top: 0; left: 50%; right: 0; bottom: 50%}
-	#sw{background: #fff; top: 50%; left: 0; right: 50%; bottom: 0}
-	#se{background: #fff; top: 50%; left: 50%; right: 0; bottom: 0}
-	#east{background: #fff; top: 0; left: 50%; right: 0; bottom: 0}
-	#west{background: #fff; top: 0; left: 0%; right: 50%; bottom: 0}
-	</style>
 	<div id="west">
-		<canvas id="chart1" width="100%" height="95%"></canvas>
+		<canvas id="chart1"></canvas>
 		<script>
 			var barChartData = {
 				labels: [],
@@ -30,21 +30,21 @@
 			{% endfor %}
 			
 			var colors = [
-				"rgba(255,0,0,1)",
-				"rgba(200,50,0,1)",
-				"rgba(150,100,0,1)",
-				"rgba(100,150,0,1)",
-				"rgba(50,200,0,1)",
-				"rgba(0,255,0,1)",
-				"rgba(0,200,50,1)",
-				"rgba(0,150,100,1)",
-				"rgba(0,100,150,1)",
-				"rgba(0,50,200,1)",
-				"rgba(0,0,255,1)",
-				"rgba(50,0,200,1)",
-				"rgba(100,0,150,1)",
-				"rgba(150,0,100,1)",
-				"rgba(200,0,50,1)"
+				"rgba(102,205,170,1)",
+				"rgba(127,255,212,1)",
+				"rgba(0,100,0,1)",
+				"rgba(85,107,47,1)",
+				"rgba(143,188,143,1)",
+				"rgba(46,139,87,1)",
+				"rgba(60,179,113,1)",
+				"rgba(32,178,170,,1)",
+				"rgba(152,251,152,1)",
+				"rgba(0,255,127,1)",
+				"rgba(124,252,0,1)",
+				"rgba(0,250,154,1)",
+				"rgba(173,255,47,1)",
+				"rgba(20,205,20,1)",
+				"rgba(154,205,50,1)"
 				];
 			var counter = 0;
 			{% for key, value in render_this['chart1']['values'].items() %}
@@ -56,17 +56,19 @@
 				counter += 1;
 			{% endfor %}
 			
-			var myChart = document.getElementById("chart1").getContext("2d");
+			var myChart = document.getElementById("chart1");
 			
 			var chart = new Chart(myChart, {
 				type: 'bar',
 				data: barChartData,
 				options: {
+					responsive: true,
+					maintainAspectRatio: false,
 					title: {
 						display: true,
-						text: "{{ render_this['chart1']['title'] }}"
+						text: "{{ render_this['chart1']['title'] }}",
+						fontSize: 18
 					},
-					responsive: true,
 					scales: {
 						xAxes: [{
 							stacked: true
@@ -74,12 +76,20 @@
 						yAxes: [{
 							stacked: true
 						}]
+					},
+					legend: {
+						display: true,
+						position: 'bottom'
+					},
+					hover: {
+						mode: 'nearest'
 					}
 				}
 			});
 		  
 		</script>
 	</div>
+	
 	<div id="ne">
 		<canvas id="chart2"></canvas>
 		<script>
@@ -92,7 +102,23 @@
 				barChartData.labels.push('{{ item }}');
 			{% endfor %}
 			
-			var colors = ["rgba(255,0,0,1)", "rgba(170,80,0,1)", "rgba(80,210,0,1)", "rgba(0,255,0,1)", "rgba(0,130,80,1)", "rgba(0,80,120,1)", "rgba(0,0,200,1)"];
+			var colors = [
+				"rgba(20,205,20,1)",
+				"rgba(0,250,154,1)",
+				"rgba(173,255,47,1)",
+				"rgba(0,255,127,1)",
+				"rgba(124,252,0,1)",
+				"rgba(154,205,50,1)",
+				"rgba(102,205,170,1)",
+				"rgba(127,255,212,1)",
+				"rgba(0,100,0,1)",
+				"rgba(85,107,47,1)",
+				"rgba(143,188,143,1)",
+				"rgba(46,139,87,1)",
+				"rgba(60,179,113,1)",
+				"rgba(32,178,170,,1)",
+				"rgba(152,251,152,1)"
+				];
 			
 			var counter = 0;
 			{% for key, value in render_this['chart2']['values'].items() %}
@@ -112,16 +138,28 @@
 				options: {
 					title: {
 						display: true,
-						text: "{{ render_this['chart2']['title'] }}"
+						text: "{{ render_this['chart2']['title'] }}",
+						fontSize: 18
 					},
 					responsive: true,
+					maintainAspectRatio: false,
 					scales: {
 						xAxes: [{
-							stacked: true
+							stacked: true,
+							ticks: {
+								fontSize: 9
+							}
 						}],
 						yAxes: [{
 							stacked: true
 						}]
+					},
+					legend: {
+						display: true,
+						position: 'top'
+					},
+					hover: {
+						mode: 'nearest'
 					}
 				}
 			});
@@ -129,7 +167,7 @@
 		</script>
 	</div>
 	<div id="se">
-		<canvas id="chart3" width="100%" height="46%"></canvas>
+		<canvas id="chart3"></canvas>
 		<script>
 			var barChartData = {
 				labels: [],
@@ -141,21 +179,21 @@
 			{% endfor %}
 			
 			var colors = [
-				"rgba(255,0,0,1)",
-				"rgba(200,50,0,1)",
-				"rgba(150,100,0,1)",
-				"rgba(100,150,0,1)",
-				"rgba(50,200,0,1)",
-				"rgba(0,255,0,1)",
-				"rgba(0,200,50,1)",
-				"rgba(0,150,100,1)",
-				"rgba(0,100,150,1)",
-				"rgba(0,50,200,1)",
-				"rgba(0,0,255,1)",
-				"rgba(50,0,200,1)",
-				"rgba(100,0,150,1)",
-				"rgba(150,0,100,1)",
-				"rgba(200,0,50,1)"
+				"rgba(20,205,20,1)",
+				"rgba(0,250,154,1)",
+				"rgba(173,255,47,1)",
+				"rgba(0,255,127,1)",
+				"rgba(124,252,0,1)",
+				"rgba(154,205,50,1)",
+				"rgba(102,205,170,1)",
+				"rgba(127,255,212,1)",
+				"rgba(0,100,0,1)",
+				"rgba(85,107,47,1)",
+				"rgba(143,188,143,1)",
+				"rgba(46,139,87,1)",
+				"rgba(60,179,113,1)",
+				"rgba(32,178,170,,1)",
+				"rgba(152,251,152,1)"
 				];
 				var counter = 0;
 			{% for key, value in render_this['chart3']['values'].items() %}
@@ -170,14 +208,16 @@
 			var myChart = document.getElementById("chart3").getContext("2d");
 			
 			var chart = new Chart(myChart, {
-				type: 'bar',
+				type: 'line',
 				data: barChartData,
 				options: {
 					title: {
 						display: true,
-						text: "{{ render_this['chart3']['title'] }}"
+						text: "{{ render_this['chart3']['title'] }}",
+						fontSize: 18
 					},
 					responsive: true,
+					maintainAspectRatio: false,
 					scales: {
 						xAxes: [{
 							stacked: true
@@ -185,6 +225,13 @@
 						yAxes: [{
 							stacked: true
 						}]
+					},
+					legend: {
+						display: true,
+						position: 'bottom'
+					},
+					hover: {
+						mode: 'nearest'
 					}
 				}
 			});

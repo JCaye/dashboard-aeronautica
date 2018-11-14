@@ -10,7 +10,7 @@ import pandas as pd
 
 from flask import current_app, g
 from flask.cli import with_appcontext
-from .model import Ocorrencia, Recomendacao, Fator, Aeronave, Base
+from . import model
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -32,7 +32,7 @@ def close_session(e=None):
 
 def init_db():
     engine = get_engine()
-    Base.metadata.create_all(engine)
+    model.Base.metadata.create_all(engine)
     s = get_session()
     
     data_oco = pd.read_csv('oco.csv', sep='~')
@@ -50,21 +50,21 @@ def init_db():
                                     .apply(lambda codigo:
                                         list(data_rec[data_rec['codigo_ocorrencia'] == codigo]
                                             .apply(lambda row:
-                                                Recomendacao(**row.to_dict()), axis = 1))))
+                                                model.Recomendacao(**row.to_dict()), axis = 1))))
     data_oco['fatores'] = (data_oco['codigo_ocorrencia']
                                     .apply(lambda codigo:
                                         list(data_ftc[data_ftc['codigo_ocorrencia'] == codigo]
                                             .apply(lambda row:
-                                                Fator(**row.to_dict()), axis = 1))))
+                                                model.Fator(**row.to_dict()), axis = 1))))
     data_oco['aeronaves'] = (data_oco['codigo_ocorrencia']
                                     .apply(lambda codigo:
                                         list(data_anv[data_anv['codigo_ocorrencia'] == codigo]
                                             .apply(lambda row:
-                                                Aeronave(**row.to_dict()), axis = 1))))
+                                                model.Aeronave(**row.to_dict()), axis = 1))))
     
     
     
-    [s.add(Ocorrencia(**data_oco.iloc[i].to_dict())) for i in range(data_oco.shape[0])]
+    [s.add(model.Ocorrencia(**data_oco.iloc[i].to_dict())) for i in range(data_oco.shape[0])]
     s.commit()
     close_session()
 
